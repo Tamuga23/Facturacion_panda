@@ -1,0 +1,5 @@
+{
+  "name": "PandaStore Invoice Generator",
+  "description": "AI-powered invoice generator for PandaStore with PDF export and consecutive numbering.",
+  "requestFramePermissions": []
+}
