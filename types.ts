@@ -28,5 +28,5 @@ export interface InvoiceData {
   shippingCost: number;
   discount: number;
   note: string;
-  paymentMethods: string;
+  warrantyText: string;
 }
