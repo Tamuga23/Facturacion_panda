@@ -41,6 +41,8 @@ const App: React.FC = () => {
 
   // Item Entry State
   const [currentItemId, setCurrentItemId] = useState<string>('');
+  const [isCustomItem, setIsCustomItem] = useState<boolean>(false);
+  const [customItemName, setCustomItemName] = useState<string>('');
   const [currentPriceC, setCurrentPriceC] = useState<string>('');
   const [currentPriceUSD, setCurrentPriceUSD] = useState<string>('0');
   const [currentQuantity, setCurrentQuantity] = useState<string>('1');
@@ -97,8 +99,21 @@ const App: React.FC = () => {
   };
 
   const handleAddItem = () => {
-    const product = PRODUCT_CATALOG.find(p => p.id === currentItemId);
-    if (!product) return;
+    let product;
+
+    if (isCustomItem) {
+      if (!customItemName.trim()) return;
+      product = {
+        id: `custom-${Date.now()}`,
+        description: customItemName,
+        defaultPriceC: 0,
+        defaultPriceUSD: 0,
+        image: ''
+      };
+    } else {
+      product = PRODUCT_CATALOG.find(p => p.id === currentItemId);
+      if (!product) return;
+    }
 
     const newItem: InvoiceItem = {
       product,
@@ -113,6 +128,7 @@ const App: React.FC = () => {
     
     // Reset inputs
     setCurrentItemId('');
+    setCustomItemName('');
     setCurrentPriceC('');
     setCurrentPriceUSD('0');
     setCurrentQuantity('1');
@@ -300,16 +316,38 @@ const App: React.FC = () => {
 
         {/* Product Catalog & Adder */}
         <div className="mb-8 border-t border-slate-100 pt-6">
-            <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Productos</h3>
-            <select 
-                value={currentItemId} onChange={(e) => setCurrentItemId(e.target.value)}
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 bg-slate-50"
-            >
-                <option value="">Buscar en catálogo...</option>
-                {PRODUCT_CATALOG.map(p => (
-                    <option key={p.id} value={p.id}>{p.id} - {p.description}</option>
-                ))}
-            </select>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">Productos</h3>
+              <label className="flex items-center gap-2 text-xs font-bold text-slate-500 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={isCustomItem} 
+                  onChange={(e) => setIsCustomItem(e.target.checked)}
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+                Item Personalizado
+              </label>
+            </div>
+            
+            {isCustomItem ? (
+              <input 
+                type="text" 
+                placeholder="Nombre del producto..." 
+                value={customItemName}
+                onChange={(e) => setCustomItemName(e.target.value)}
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 bg-slate-50 focus:ring-2 focus:ring-blue-100"
+              />
+            ) : (
+              <select 
+                  value={currentItemId} onChange={(e) => setCurrentItemId(e.target.value)}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 bg-slate-50"
+              >
+                  <option value="">Buscar en catálogo...</option>
+                  {PRODUCT_CATALOG.map(p => (
+                      <option key={p.id} value={p.id}>{p.id} - {p.description}</option>
+                  ))}
+              </select>
+            )}
             
             <div className="grid grid-cols-3 gap-3 mb-4">
                 <input 
@@ -341,7 +379,7 @@ const App: React.FC = () => {
               </label>
               <button 
                   onClick={handleAddItem}
-                  disabled={!currentItemId || !currentPriceC}
+                  disabled={(isCustomItem ? !customItemName.trim() : !currentItemId) || !currentPriceC}
                   className="flex-[2] bg-blue-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all active:scale-95 disabled:opacity-40"
               >
                   <Plus size={18} /> Añadir Item
