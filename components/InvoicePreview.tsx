@@ -96,7 +96,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ data, logoSrc }, ref
           </div>
         </div>
       </div>
-      <div className="w-24 h-24 flex flex-col items-center justify-center relative overflow-hidden rounded-xl bg-[#0e5c7a] shadow-inner">
+      <div className="w-24 h-24 flex flex-col items-center justify-center relative overflow-hidden rounded-xl bg-black shadow-inner">
           {logoSrc ? (
               <img src={logoSrc} alt="Logo" className="object-contain w-full h-full p-2" />
           ) : (

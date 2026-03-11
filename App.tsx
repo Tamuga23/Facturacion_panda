@@ -20,11 +20,11 @@ const App: React.FC = () => {
   const [feedback, setFeedback] = useState<{type: 'success' | 'error', message: string} | null>(null);
   
   const [rawClientText, setRawClientText] = useState('');
-  const [consecutiveCode, setConsecutiveCode] = useState<string>('A001196');
+  const [consecutiveCode, setConsecutiveCode] = useState<string>('A001250');
   const [logoSrc, setLogoSrc] = useState<string>(DEFAULT_LOGO);
   
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
-    number: 'A001196',
+    number: 'A001250',
     date: new Date().toISOString().split('T')[0],
     client: {
       fullName: '',
